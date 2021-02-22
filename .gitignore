@@ -1,0 +1,11 @@
+# Folders
+art
+docs
+env
+seed
+
+# Database
+drago/db.sqlite3
+
+# React dependencies
+drago/frontend/node_modules/
