@@ -1,0 +1,36 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "name": "carlos",
+      "email": "carlos@santana.com",
+      "password": "hey"
+    },
+    {
+      "id": 2
+    },
+    {
+      "id": 3
+    },
+    {
+      "username": "agustin",
+      "email": "agustin.gcomas@gmail.com",
+      "password": "coco",
+      "id": 4
+    }
+  ]
+}

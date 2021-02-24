@@ -40,13 +40,18 @@ INSTALLED_APPS = [
 
     #Third party apps
     'rest_framework',
-    'rest_framework.authtoken',
+    # 'rest_framework.authtoken',
+    'corsheaders',
+    'knox',
 
     #Local apps
-    'server',
 ]
 
 MIDDLEWARE = [
+    #cors
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    # django built-in
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -129,6 +134,13 @@ STATIC_URL = '/static/'
 #REST DJANGO FRAMEWORK
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',  # <-- And here
+        # 'rest_framework.authentication.TokenAuthentication',  # <-- And here
+        'knox.auth.TokenAuthentication',
     ],
 }
+
+
+# Configuration of django-cors-headers
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000"
+]
