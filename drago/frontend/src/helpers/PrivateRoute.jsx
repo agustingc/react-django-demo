@@ -1,3 +1,8 @@
+/**
+ * Credit to ganeshmani
+ * https://github.com/ganeshmani/redux-toolkit-user-flow
+ */
+
 import React from "react";
 import { Redirect, Route } from "react-router-dom";
 
