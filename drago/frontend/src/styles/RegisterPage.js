@@ -50,4 +50,9 @@ export const Body = styled.div`
     max-width: 100px;
     padding-top: 2em;
   }
+
+  > div {
+    padding: 2em;
+    text-align: center;
+  }
 `;

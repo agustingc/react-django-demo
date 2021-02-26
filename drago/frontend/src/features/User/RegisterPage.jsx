@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { signupUser, userSelector, clearState } from "./UserSlice";
 import { Link, useHistory } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
 
 import { Button, Form } from "semantic-ui-react";
 
@@ -19,7 +18,12 @@ function RegisterPage() {
     confirm_password: "",
   });
 
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirm_password: "",
+  });
 
   // redux (global state) for login validation
   const dispatch = useDispatch();
@@ -39,27 +43,41 @@ function RegisterPage() {
   // lifecycle: update
   useEffect(() => {
     if (isSuccess) {
+      // registration successful
       dispatch(clearState());
       history.push("/");
     }
 
     if (isError) {
-      toast.error(errorMessage);
+      // registration failure
       dispatch(clearState());
     }
   }, [isSuccess, isError]);
 
+  // render errorMessage object
+  function renderError() {
+    if (!errorMessage) {
+      return;
+    }
+    const list = Object.entries(errorMessage).map(([key, val], index) => (
+      <li key={index}>
+        {key}: {val}
+      </li>
+    ));
+
+    return (
+      <div>
+        <ul>{list}</ul>
+      </div>
+    );
+  }
   // helper function for submitting form data
   function handleSubmit(event) {
     event.preventDefault();
 
     if (validate()) {
+      // submit if form valid
       dispatch(signupUser(user));
-    } else {
-      // form errors: needs rework
-      for (const e in errors) {
-        toast.error(e);
-      }
     }
   }
 
@@ -72,8 +90,13 @@ function RegisterPage() {
   // helper function to validate form
 
   function validate() {
-    let input = user;
-    let err = {};
+    const input = user;
+    let err = {
+      username: "",
+      email: "",
+      password: "",
+      confirm_password: "",
+    };
     let isValid = true;
 
     if (!input["username"] || input["username"] === "") {
@@ -81,9 +104,9 @@ function RegisterPage() {
       err["username"] = "Please enter your username.";
     }
 
-    if (!input["email"] || input["username"] === "") {
+    if (!input["email"] || input["email"] === "") {
       isValid = false;
-      errors["email"] = "Please enter your email Address.";
+      err["email"] = "Please enter your email Address.";
     }
 
     if (typeof input["email"] !== "undefined") {
@@ -92,7 +115,7 @@ function RegisterPage() {
       );
       if (!pattern.test(input["email"])) {
         isValid = false;
-        errors["email"] = "Please enter valid email address.";
+        err["email"] = "Please enter valid email address.";
       }
     }
 
@@ -135,7 +158,7 @@ function RegisterPage() {
         {/* Body */}
         <Body>
           <h2>Get started with your free account</h2>
-          <p>Fill in the registration formto create your account.</p>
+          <p>Fill in the registration form to create your account.</p>
           <Form onSubmit={handleSubmit}>
             <Form.Field>
               <label>Enter Username</label>
@@ -145,6 +168,7 @@ function RegisterPage() {
                 onChange={handleChange} // update state
                 value={user.username} // controlled component
               />
+              {errors.username === "" ? "" : errors.username}
             </Form.Field>
             <Form.Field>
               <label>Enter Email</label>
@@ -154,6 +178,7 @@ function RegisterPage() {
                 onChange={handleChange} // update state
                 value={user.email} // controlled component
               />
+              {errors.email === "" ? "" : errors.email}
             </Form.Field>
 
             <Form.Field>
@@ -164,6 +189,7 @@ function RegisterPage() {
                 onChange={handleChange} // update state
                 value={user.password} // controlled component
               />
+              {errors.password === "" ? "" : errors.password}
             </Form.Field>
 
             <Form.Field>
@@ -174,6 +200,7 @@ function RegisterPage() {
                 onChange={handleChange} // update state
                 value={user.confirm_password} // controlled component
               />
+              {errors.confirm_password === "" ? "" : errors.confirm_password}
             </Form.Field>
             <Button
               type="submit" // submit action
@@ -181,11 +208,11 @@ function RegisterPage() {
               Submit
             </Button>
           </Form>
-          <Toaster />
           <div>
             <p>Already have an account? </p>
             <Link to="login">Login</Link>
           </div>
+          {renderError()}
         </Body>
       </Wrapper>
     </>

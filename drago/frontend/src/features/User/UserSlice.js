@@ -6,7 +6,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
  * when called.
  *
  * signupUser.pending: users/signupUser/pending
- * signupUser.fulfilled: users/signupUser/fullfilled
+ * signupUser.fulfilled: users/signupUser/fulfilled
  * signupUser.rejected: users/signupUser/rejected
  *
  * createAsyncThunk returns a standard Redux thunk action creator (i.e. a function).
@@ -40,20 +40,21 @@ export const signupUser = createAsyncThunk(
       });
 
       // capture response data
-      let data = await response.json();
-      console.log("data", data);
+      const data = await response.json();
 
       if (response.status === 200) {
+        console.log("success");
         // success
         localStorage.setItem("token", data.token);
         return { ...data, username: username };
       } else {
         // fail
+        console.log("fail" + data);
         return thunkAPI.rejectWithValue(data);
       }
     } catch (e) {
       // bad request
-      console.log("Error", e.response.data);
+      console.log("Error");
       return thunkAPI.rejectWithValue(e.response.data);
     }
   }
@@ -76,9 +77,9 @@ export const userSlice = createSlice({
     //the initial state of the reducer
     username: "",
     email: "",
-    isFetching: "",
-    isSuccess: "",
-    isError: "",
+    isFetching: false,
+    isSuccess: false,
+    isError: false,
     errorMessage: "",
   },
   reducers: {
@@ -105,10 +106,11 @@ export const userSlice = createSlice({
     [signupUser.rejected]: (state, { payload }) => {
       state.isFetching = false;
       state.isError = true;
+      state.isSuccess = false;
       state.errorMessage = payload; // modify
     },
     [signupUser.fulfilled]: (state, { payload }) => {
-      console.log("payload", payload);
+      console.log("fulfilled, payload", payload);
       state.isFetching = false;
       state.isSuccess = true;
       state.isError = false;
