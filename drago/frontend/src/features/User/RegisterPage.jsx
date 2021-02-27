@@ -168,7 +168,7 @@ function RegisterPage() {
                 onChange={handleChange} // update state
                 value={user.username} // controlled component
               />
-              {errors.username === "" ? "" : errors.username}
+              {errors.username && errors.username}
             </Form.Field>
             <Form.Field>
               <label>Enter Email</label>
@@ -178,7 +178,7 @@ function RegisterPage() {
                 onChange={handleChange} // update state
                 value={user.email} // controlled component
               />
-              {errors.email === "" ? "" : errors.email}
+              {errors.email && errors.email}
             </Form.Field>
 
             <Form.Field>
@@ -189,7 +189,7 @@ function RegisterPage() {
                 onChange={handleChange} // update state
                 value={user.password} // controlled component
               />
-              {errors.password === "" ? "" : errors.password}
+              {errors.password && errors.password}
             </Form.Field>
 
             <Form.Field>
@@ -200,7 +200,7 @@ function RegisterPage() {
                 onChange={handleChange} // update state
                 value={user.confirm_password} // controlled component
               />
-              {errors.confirm_password === "" ? "" : errors.confirm_password}
+              {errors.confirm_password && errors.confirm_password}
             </Form.Field>
             <Button
               type="submit" // submit action

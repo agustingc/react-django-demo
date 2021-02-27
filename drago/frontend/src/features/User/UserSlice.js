@@ -120,11 +120,11 @@ export const userSlice = createSlice({
   },
 });
 
-/* export selector */
+/* export selector used to access redux state*/
 export const userSelector = (state) => state.user;
 
-/* export actions */
+/* export action creator used to dispatch action */
 export const { clearState } = userSlice.actions;
 
-/* export combinedReducers */
+/* export combinedReducers used for store setup */
 export default userSlice.reducer;
