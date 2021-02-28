@@ -1,13 +1,11 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { userSelector } from "./UserSlice";
 
 /* component */
-function ErrorMessage() {
-  const { errorMessage } = useSelector(userSelector);
-
+function ErrorMessage({ errorMessage }) {
+  // render list of error messages
   function renderError() {
-    if (!errorMessage) {
+    console.log("errorMessage: ", errorMessage);
+    if (!errorMessage || errorMessage === "") {
       return null;
     }
 
@@ -17,7 +15,7 @@ function ErrorMessage() {
       </li>
     ));
 
-    // render
+    // render list
     return (
       <div>
         <ul>{list}</ul>
@@ -25,7 +23,9 @@ function ErrorMessage() {
     );
   }
 
+  // render component
   return renderError();
 }
 
-export default ErrorMessage;
+/* export memoized component */
+export default React.memo(ErrorMessage);

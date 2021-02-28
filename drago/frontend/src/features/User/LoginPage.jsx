@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { clearState, userSelector } from "./UserSlice";
+import { clearState, userSelector, loginUser } from "./UserSlice";
 import { Button, Form } from "semantic-ui-react";
 import { Wrapper, Header, Body } from "../../styles/RegisterPage";
 import ErrorMessage from "./ErrorMessage";
@@ -13,14 +13,14 @@ function LoginPage() {
   const dispatch = useDispatch();
 
   // access redux global state
-  const { isSuccess, isError } = useSelector(userSelector);
+  const { isSuccess, isError, errorMessage } = useSelector(userSelector);
 
   //router
   const history = useHistory();
 
   // local state for form validation
-  const [formData, setFormData] = useState({});
-  const [errors, setErrors] = useState({});
+  const [formData, setFormData] = useState({ username: "", password: "" });
+  const [errors, setErrors] = useState({ username: "", password: "" });
 
   // handler: form change
   function handleChange(event) {
@@ -33,7 +33,7 @@ function LoginPage() {
     event.preventDefault();
 
     if (validate()) {
-      //   dispatch(loginUser(formData));
+      dispatch(loginUser(formData));
     }
   }
 
@@ -74,7 +74,7 @@ function LoginPage() {
       err["password"] = "Please enter your password";
     }
 
-    setErrors(err); // update state
+    setErrors((errors) => ({ ...errors, err })); // update state
 
     return isValid; // return value
   }
@@ -125,7 +125,7 @@ function LoginPage() {
             <p>Don't have an account? </p>
             <Link to="signup">Sign up</Link>
           </div>
-          <ErrorMessage />
+          <ErrorMessage errorMessage={errorMessage} />
         </Body>
       </Wrapper>
     </>

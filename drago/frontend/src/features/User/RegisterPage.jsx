@@ -7,6 +7,7 @@ import { Link, useHistory } from "react-router-dom";
 import { Button, Form } from "semantic-ui-react";
 
 import { Body, Wrapper, Header } from "../../styles/RegisterPage";
+import ErrorMessage from "./ErrorMessage";
 
 /* component */
 function RegisterPage() {
@@ -54,23 +55,6 @@ function RegisterPage() {
     }
   }, [isSuccess, isError]);
 
-  // render errorMessage object
-  function renderError() {
-    if (!errorMessage) {
-      return;
-    }
-    const list = Object.entries(errorMessage).map(([key, val], index) => (
-      <li key={index}>
-        {key}: {val}
-      </li>
-    ));
-
-    return (
-      <div>
-        <ul>{list}</ul>
-      </div>
-    );
-  }
   // helper function for submitting form data
   function handleSubmit(event) {
     event.preventDefault();
@@ -212,7 +196,7 @@ function RegisterPage() {
             <p>Already have an account? </p>
             <Link to="login">Login</Link>
           </div>
-          {renderError()}
+          <ErrorMessage errorMessage={errorMessage} />
         </Body>
       </Wrapper>
     </>

@@ -17,6 +17,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
  * with either the fulfilled action object or rejected action object inside, as
  * appropriate. [See `unwrapResult`].
  */
+
+/* async action creator */
 export const signupUser = createAsyncThunk(
   "users/signupUser", // a string that will be used as the prefix for the generated action types
   async (arg, thunkAPI) => {
@@ -40,7 +42,7 @@ export const signupUser = createAsyncThunk(
       });
 
       // capture response data
-      const data = await response.json();
+      const data = await response.json(); // returns promise
 
       if (response.status === 200) {
         console.log("success");
@@ -48,13 +50,82 @@ export const signupUser = createAsyncThunk(
         localStorage.setItem("token", data.token);
         return { ...data, username: username };
       } else {
-        // fail
-        console.log("fail" + data);
+        // success with error message
         return thunkAPI.rejectWithValue(data);
       }
     } catch (e) {
       // bad request
       console.log("Error");
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
+
+/* async action creator */
+export const loginUser = createAsyncThunk(
+  "users/loginUser",
+  async (arg, thunkAPI) => {
+    const { username, password } = arg; // deconstruct arg
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/auth/login", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      });
+
+      const data = await response.json(); // returns promise
+      console.log("response: ", data);
+
+      if (response.status === 200) {
+        // success
+        localStorage.setItem("token", data.token);
+        return data;
+      } else {
+        // success with error
+        return thunkAPI.rejectWithValue(data);
+      }
+    } catch (e) {
+      // rejected
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
+
+/* async action creator */
+export const fetchUserByToken = createAsyncThunk(
+  "users/fetchUserByToken",
+  async (arg, thunkAPI) => {
+    const { token } = arg; // get token
+    console.log(token);
+
+    try {
+      // get user
+      const response = await fetch("http://127.0.0.1:8000/api/auth/user", {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+      console.log("data", data, response.status);
+
+      if (response.status === 200) {
+        return data;
+      } else {
+        return thunkAPI.rejectWithValue(data);
+      }
+    } catch (e) {
+      console.log("Error", e.response.data);
       return thunkAPI.rejectWithValue(e.response.data);
     }
   }
@@ -110,12 +181,45 @@ export const userSlice = createSlice({
       state.errorMessage = payload; // modify
     },
     [signupUser.fulfilled]: (state, { payload }) => {
-      console.log("fulfilled, payload", payload);
+      console.log("payload: ", payload);
       state.isFetching = false;
       state.isSuccess = true;
       state.isError = false;
       state.email = payload.user.email;
       state.username = payload.user.name;
+    },
+    [loginUser.pending]: (state) => {
+      state.isFetching = true;
+    },
+    [loginUser.rejected]: (state, { payload }) => {
+      console.log("payload: ", payload);
+      state.isFetching = false;
+      state.isError = true;
+      state.errorMessage = payload;
+    },
+    [loginUser.fulfilled]: (state, { payload }) => {
+      console.log("loginsuccessful", payload);
+      state.isFetching = false;
+      state.isSuccess = true;
+      state.email = payload.email;
+      state.username = payload.username;
+      return state;
+    },
+    [fetchUserByToken.pending]: (state) => {
+      state.isFetching = true;
+    },
+    [fetchUserByToken.fulfilled]: (state, { payload }) => {
+      console.log("fetch user filfilled");
+
+      state.email = payload.email;
+      state.username = payload.username;
+      state.isFetching = false;
+      state.isSuccess = true;
+    },
+    [fetchUserByToken.rejected]: (state) => {
+      console.log("fetchUserByToken");
+      state.isFetching = false;
+      state.isError = true;
     },
   },
 });
