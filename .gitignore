@@ -5,10 +5,10 @@ env
 seed
 
 # Database
-drago/db.sqlite3
+demo/db.sqlite3
 
 # React dependencies
-drago/frontend/node_modules/
+demo/frontend/node_modules/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -17,5 +17,5 @@ __pycache__/
  
 
 #VS Code
-DRAGO.code-workspace
+DEMO.code-workspace
 .vscode/
