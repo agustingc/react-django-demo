@@ -88,11 +88,11 @@ export const loginUser = createAsyncThunk(
         localStorage.setItem("token", data.token);
         return data;
       } else {
-        // success with error
+        // promise resolved with error
         return thunkAPI.rejectWithValue(data);
       }
     } catch (e) {
-      // rejected
+      // promise rejected
       return thunkAPI.rejectWithValue(e.response.data);
     }
   }
@@ -116,16 +116,17 @@ export const fetchUserByToken = createAsyncThunk(
         },
       });
 
-      const data = await response.json();
-      console.log("data", data, response.status);
+      const data = await response.json(); // returns promise
 
       if (response.status === 200) {
+        // success
         return data;
       } else {
+        // successwith error
         return thunkAPI.rejectWithValue(data);
       }
     } catch (e) {
-      console.log("Error", e.response.data);
+      // error
       return thunkAPI.rejectWithValue(e.response.data);
     }
   }
@@ -209,8 +210,7 @@ export const userSlice = createSlice({
       state.isFetching = true;
     },
     [fetchUserByToken.fulfilled]: (state, { payload }) => {
-      console.log("fetch user filfilled");
-
+      console.log("fetch user filfilled; payload: ", payload);
       state.email = payload.email;
       state.username = payload.username;
       state.isFetching = false;

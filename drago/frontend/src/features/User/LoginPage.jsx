@@ -74,7 +74,7 @@ function LoginPage() {
       err["password"] = "Please enter your password";
     }
 
-    setErrors((errors) => ({ ...errors, err })); // update state
+    setErrors(err); // update state
 
     return isValid; // return value
   }

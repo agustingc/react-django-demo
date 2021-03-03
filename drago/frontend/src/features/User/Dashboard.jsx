@@ -18,11 +18,13 @@ function Dashboard() {
 
   // lifecycle: mount
   useEffect(() => {
+    // check if user is logged in
     dispatch(fetchUserByToken({ token: localStorage.getItem("token") }));
   }, []);
 
   // lifecycle: update
   useEffect(() => {
+    // user is not logged in
     if (isError) {
       dispatch(clearState());
       history.push("/login");
@@ -46,8 +48,9 @@ function Dashboard() {
             <h1>Dashboard</h1>
           </Header>
           <Body>
-            <div>Welcome back</div>
-            <h1>{username}</h1>
+            <div>
+              Welcome back <h2>{username}</h2>
+            </div>
             <Button onClick={handleLogout}>Log out</Button>
           </Body>
         </Wrapper>
