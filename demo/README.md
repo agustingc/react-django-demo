@@ -1,8 +1,7 @@
 
 
 
-Credits
--------
+#Credits
 
 Django-Knox Authentication pattern based partly on Brad Traversy's
 https://github.com/bradtraversy/lead_manager_react_django
